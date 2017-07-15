@@ -3,7 +3,7 @@ const bodyParser = require('koa-bodyparser')
 const GithubApi = require('github')
 const app = new Koa()
 const github = new GithubApi({
-  debug: true,
+  // debug: true,
   headers: {
       "user-agent": "submodule-checker"
   },
@@ -33,12 +33,15 @@ app.use(async ctx => {
   const owner = body.repository.owner.name
   console.log(`ready to process ${repo}:${headCommit}`)
 
-  const content = Buffer.from(await github.repos.getContent({
+  const response = await github.repos.getContent({
     owner,
     repo,
     path: '.submodule_checker.json',
     ref: headCommit
-  }).data.content, 'base64').toString()
+  })
+  console.log(response)
+
+  const content = Buffer.from(response.data.content, 'base64').toString()
   console.log(content)
   ctx.body = "ok"
 })
