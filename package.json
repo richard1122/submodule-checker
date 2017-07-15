@@ -1,0 +1,25 @@
+{
+  "name": "submodule-checker",
+  "version": "1.0.0",
+  "description": "Check whether a submodule is point to master branch when PR",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/richard1122/submodule-checker.git"
+  },
+  "author": "Richard",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/richard1122/submodule-checker/issues"
+  },
+  "homepage": "https://github.com/richard1122/submodule-checker#readme",
+  "dependencies": {
+    "github": "^9.2.0",
+    "koa": "^2.3.0",
+    "koa-bodyparser": "^4.2.0"
+  }
+}
