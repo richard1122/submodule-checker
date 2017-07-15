@@ -24,8 +24,16 @@ app.use(async ctx => {
     ctx.status = 400
   }
   const headCommit = body.head_commit.id
-  const repo = body.repository.full_name
+  const repo = body.repository.name
+  const owner = body.repository.owner.name
   console.log(`ready to process ${repo}:${headCommit}`)
-  ctx.body = 'ok'
+
+  const contentResponse = await github.repos.getContent({
+    owner,
+    repo,
+    path: '.submodule_checker.yml',
+    ref: headCommit
+  })
+  console.log(contentResponse)
 })
 app.listen(3000)
