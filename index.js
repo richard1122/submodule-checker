@@ -19,9 +19,14 @@ app.use(bodyParser())
 app.use(async ctx => {
   const event = ctx.header['x-github-event']
   console.log(`${event} received.`)
+  if (event != 'push') {
+    ctx.body = "skip"
+    return
+  }
   const body = ctx.request.body
   if (body === undefined) {
     ctx.status = 400
+    return
   }
   const headCommit = body.head_commit.id
   const repo = body.repository.name
