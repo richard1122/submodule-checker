@@ -20,9 +20,12 @@ app.use(async ctx => {
   const event = ctx.header['X-GitHub-Event']
   console.log(`${event} received.`)
   const body = ctx.request.body
+  if (body === undefined) {
+    ctx.status = 400
+  }
   const headCommit = body.head_commit.id
   const repo = body.repository.full_name
   console.log(body)
-  ctx.response.body = 'ok'
+  ctx.body = 'ok'
 })
 app.listen(3000)
