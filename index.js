@@ -35,5 +35,6 @@ app.use(async ctx => {
     ref: headCommit
   })
   console.log(contentResponse)
+  ctx.body = "ok"
 })
 app.listen(3000)
