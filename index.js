@@ -33,13 +33,13 @@ app.use(async ctx => {
   const owner = body.repository.owner.name
   console.log(`ready to process ${repo}:${headCommit}`)
 
-  const contentResponse = await github.repos.getContent({
+  const content = new Bufer(await github.repos.getContent({
     owner,
     repo,
     path: '.submodule_checker.json',
     ref: headCommit
-  })
-  console.log(contentResponse)
+  }).data.content, 'base64').toString('utf-8')
+  console.log(content)
   ctx.body = "ok"
 })
 app.listen(3000)
