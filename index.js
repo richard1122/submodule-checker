@@ -25,7 +25,7 @@ app.use(async ctx => {
   }
   const headCommit = body.head_commit.id
   const repo = body.repository.full_name
-  console.log(body)
+  console.log(`ready to process ${repo}:${headCommit}`)
   ctx.body = 'ok'
 })
 app.listen(3000)
