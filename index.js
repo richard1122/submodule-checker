@@ -8,12 +8,9 @@ const github = {
 }
 
 const request = (endpoint, options) => {
-  return fetch(`https://api.github.com/${endpoint}`, {
-    ...options,
-    headers: {
-      ...github
-    }
-  })
+  return fetch(`https://api.github.com/${endpoint}`, Object.assign(options, {
+    headers: github
+  }))
 }
 
 
