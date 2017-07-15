@@ -36,7 +36,7 @@ app.use(async ctx => {
   const contentResponse = await github.repos.getContent({
     owner,
     repo,
-    path: '.submodule_checker.yml',
+    path: '.submodule_checker.json',
     ref: headCommit
   })
   console.log(contentResponse)
