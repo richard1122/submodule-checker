@@ -17,6 +17,8 @@ github.authenticate({
 app.use(bodyParser())
 
 app.use(async ctx => {
+  console.log(ctx.request.body)
+  console.log(ctx.header)
   const event = ctx.header['X-GitHub-Event']
   console.log(`${event} received.`)
   const body = ctx.request.body
