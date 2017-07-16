@@ -44,7 +44,7 @@ app.use(async ctx => {
   })
   console.log(response)
 
-  const content = Buffer.from(response.data.content, 'base64').toString()
+  const content = Buffer.from(response.content, 'base64').toString()
   console.log(content)
   ctx.body = "ok"
 })
