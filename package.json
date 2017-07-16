@@ -4,7 +4,7 @@
   "description": "Check whether a submodule is point to master branch when PR",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node --harmony index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,6 +20,7 @@
   "dependencies": {
     "koa": "^2.3.0",
     "koa-bodyparser": "^4.2.0",
-    "node-fetch": "^1.7.1"
+    "request": "^2.81.0",
+    "request-promise-native": "^1.0.4"
   }
 }

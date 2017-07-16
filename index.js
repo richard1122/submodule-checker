@@ -1,6 +1,6 @@
 const Koa = require('koa')
 const bodyParser = require('koa-bodyparser')
-const fetch = require('node-fetch')
+const rp = require('request-promise-native')
 const app = new Koa()
 const github = {
     "user-agent": "submodule-checker",
@@ -8,11 +8,14 @@ const github = {
 }
 
 const request = (endpoint, options) => {
-  return fetch(`https://api.github.com/${endpoint}`, Object.assign(options, {
-    headers: github
-  }))
+  return rp({
+    uri: `https://api.gitthub.com/`,
+    ...options,
+    headers: {
+      ...github
+    }
+  })
 }
-
 
 app.use(bodyParser())
 
