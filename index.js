@@ -36,7 +36,12 @@ app.use(async ctx => {
   const owner = body.repository.owner.name
   console.log(`ready to process ${repo}:${headCommit}`)
 
-  const response = await request(`repos/${owner}/${repo}/contents/.submodule_checker.json?ref=${headCommit}`)
+  const response = await request(`repos/${owner}/${repo}/contents/.submodule_checker.json`, {
+    qs: {
+      ref: headCommit
+    },
+    json: true
+  })
   console.log(response)
 
   const content = Buffer.from(response.data.content, 'base64').toString()
