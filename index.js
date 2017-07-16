@@ -9,7 +9,7 @@ const github = {
 
 const request = (endpoint, options) => {
   return rp({
-    uri: `https://api.gitthub.com/`,
+    uri: `https://api.github.com/`,
     ...options,
     headers: {
       ...github
