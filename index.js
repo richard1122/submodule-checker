@@ -8,15 +8,13 @@ const github = {
 }
 
 const request = (endpoint, options) => {
-  const request = {
-    uri: `https://api.github.com/`,
+  return rp({
+    uri: `https://api.github.com/${endpoint}`,
     ...options,
     headers: {
       ...github
     }
-  }
-  console.log(`request: ${JSON.stringify(request)}`)
-  return rp(request)
+  })
 }
 
 app.use(bodyParser())
