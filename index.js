@@ -15,7 +15,6 @@ const request = (endpoint, options) => {
       ...github
     }
   }
-  console.log(JSON.stringify(request))
   return rp(request)
 }
 
@@ -70,7 +69,7 @@ app.use(async ctx => {
           body: {
             state: 'success',
             context: `CI/submodule-checker-${subRepo}`,
-            description: `${subRepo}:${sha} is on master`
+            description: `${subRepo} is on master`
           },
           json: true
         })
@@ -80,7 +79,7 @@ app.use(async ctx => {
           body: {
             state: 'failure',
             context: `CI/submodule-checker-${subRepo}`,
-            description: `${subRepo}:${sha} is NOT on master`
+            description: `${subRepo} is NOT on master`
           },
           json: true
         })
