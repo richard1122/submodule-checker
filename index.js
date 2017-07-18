@@ -56,10 +56,10 @@ app.use(async ctx => {
     })
     console.log(submodule)
     if (submodule.type !== 'submodule') return
-    const repo = submodule.submodule_git_url.split(':')[1].split('.')[0]
+    const subRepo = submodule.submodule_git_url.split(':')[1].split('.')[0]
     const sha = submodule.sha
-    console.log(`${repo}:${sha}`)
-    const compare = await request(`repos/${repo}/compare/master...${sha}`, {
+    console.log(`${subRepo}:${sha}`)
+    const compare = await request(`repos/${subRepo}/compare/master...${sha}`, {
       json: true
     })
     console.log(compare)
