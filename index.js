@@ -43,7 +43,7 @@ app.use(async ctx => {
     },
     json: true
   })
-  const content = Buffer.from(response.content, 'base64').toString()
+  const content = JSON.parse(Buffer.from(response.content, 'base64').toString())
   console.log(content)
   ctx.body = "ok"
 
