@@ -37,33 +37,62 @@ app.use(async ctx => {
   const owner = body.repository.owner.name
   console.log(`ready to process ${repo}:${headCommit}`)
 
-  const response = await request(`repos/${owner}/${repo}/contents/.submodule_checker.json`, {
-    qs: {
-      ref: headCommit
-    },
-    json: true
-  })
-  const content = JSON.parse(Buffer.from(response.content, 'base64').toString())
-  console.log(content)
-  ctx.body = "ok"
-
-  await Promise.all(content.map(async it => {
-    const submodule = await request(`repos/${owner}/${repo}/contents${it}`, {
+  try {
+    const response = await request(`repos/${owner}/${repo}/contents/.submodule_checker.json`, {
       qs: {
         ref: headCommit
       },
       json: true
     })
-    console.log(submodule)
-    if (submodule.type !== 'submodule') return
-    const subRepo = submodule.submodule_git_url.split(':')[1].split('.')[0]
-    const sha = submodule.sha
-    console.log(`${subRepo}:${sha}`)
-    const compare = await request(`repos/${subRepo}/compare/master...${sha}`, {
-      json: true
+    const content = JSON.parse(Buffer.from(response.content, 'base64').toString())
+    console.log(content)
+    ctx.body = "ok"
+
+    await Promise.all(content.map(async it => {
+      const submodule = await request(`repos/${owner}/${repo}/contents${it}`, {
+        qs: {
+          ref: headCommit
+        },
+        json: true
+      })
+      if (submodule.type !== 'submodule') return
+      const subRepo = submodule.submodule_git_url.split(':')[1].split('.')[0]
+      const sha = submodule.sha
+      console.log(`${subRepo}:${sha}`)
+      const compare = await request(`repos/${subRepo}/compare/master...${sha}`, {
+        json: true
+      })
+      console.log(compare.status)
+      if (compare.status === 'identical' || compare.status === 'behind') {
+        await request(`/repos/${owner}/${repo}/statuses/${headCommit}`, {
+          method: 'POST',
+          form: {
+            state: 'success',
+            context: `CI/submodule-checker-${subRepo}`,
+            description: `${subRepo}:${sha} is on master`
+          }
+        })
+      } else {
+        await request(`/repos/${owner}/${repo}/statuses/${headCommit}`, {
+          method: 'POST',
+          form: {
+            state: 'failure',
+            context: `CI/submodule-checker-${subRepo}`,
+            description: `${subRepo}:${sha} is NOT on master`
+          }
+        })
+      }
+    }))
+  } catch(e) {
+    await request(`/repos/${owner}/${repo}/statuses/${headCommit}`, {
+      method: 'POST',
+      form: {
+        state: 'error',
+        context: 'CI/submodule-checker',
+        description: e.message || e
+      }
     })
-    console.log(compare)
-    console.log(compare.status)
-  }))
+  }
 })
+
 app.listen(3000)
