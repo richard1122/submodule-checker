@@ -65,7 +65,7 @@ app.use(async ctx => {
       })
       console.log(compare.status)
       if (compare.status === 'identical' || compare.status === 'behind') {
-        return await request(`/repos/${owner}/${repo}/statuses/${headCommit}`, {
+        return await request(`repos/${owner}/${repo}/statuses/${headCommit}`, {
           method: 'POST',
           body: {
             state: 'success',
@@ -75,7 +75,7 @@ app.use(async ctx => {
           json: true
         })
       } else {
-        return await request(`/repos/${owner}/${repo}/statuses/${headCommit}`, {
+        return await request(`repos/${owner}/${repo}/statuses/${headCommit}`, {
           method: 'POST',
           body: {
             state: 'failure',
@@ -87,7 +87,7 @@ app.use(async ctx => {
       }
     }))
   } catch(e) {
-    await request(`/repos/${owner}/${repo}/statuses/${headCommit}`, {
+    await request(`repos/${owner}/${repo}/statuses/${headCommit}`, {
       method: 'POST',
       body: {
         state: 'error',
