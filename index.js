@@ -43,10 +43,18 @@ app.use(async ctx => {
     },
     json: true
   })
-  console.log(response)
-
   const content = Buffer.from(response.content, 'base64').toString()
   console.log(content)
   ctx.body = "ok"
+
+  await Promise.all(content.map(async it => {
+    const submodule = await request(`repos/${owner}/${repo}/contents${it}`, {
+      qs: {
+        ref: headCommit
+      },
+      json: true
+    })
+    console.log(submodule)
+  }))
 })
 app.listen(3000)
