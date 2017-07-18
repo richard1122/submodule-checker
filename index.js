@@ -4,7 +4,8 @@ const rp = require('request-promise-native')
 const app = new Koa()
 const github = {
     "user-agent": "submodule-checker",
-    Authorization: `token ${process.env.GH_TOKEN}`
+    Authorization: `token ${process.env.GH_TOKEN}`,
+    Accept: 'application/vnd.github.mercy-preview+json'
 }
 
 const request = (endpoint, options) => {
