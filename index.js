@@ -66,31 +66,34 @@ app.use(async ctx => {
       if (compare.status === 'identical' || compare.status === 'behind') {
         return await request(`/repos/${owner}/${repo}/statuses/${headCommit}`, {
           method: 'POST',
-          form: {
+          body: {
             state: 'success',
             context: `CI/submodule-checker-${subRepo}`,
             description: `${subRepo}:${sha} is on master`
-          }
+          },
+          json: true
         })
       } else {
         return await request(`/repos/${owner}/${repo}/statuses/${headCommit}`, {
           method: 'POST',
-          form: {
+          body: {
             state: 'failure',
             context: `CI/submodule-checker-${subRepo}`,
             description: `${subRepo}:${sha} is NOT on master`
-          }
+          },
+          json: true
         })
       }
     }))
   } catch(e) {
     await request(`/repos/${owner}/${repo}/statuses/${headCommit}`, {
       method: 'POST',
-      form: {
+      body: {
         state: 'error',
         context: 'CI/submodule-checker',
         description: e.message || e
-      }
+      },
+      json: true
     })
   }
 })
