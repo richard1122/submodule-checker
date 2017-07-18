@@ -9,13 +9,15 @@ const github = {
 }
 
 const request = (endpoint, options) => {
-  return rp({
+  const request = {
     uri: `https://api.github.com/${endpoint}`,
     ...options,
     headers: {
       ...github
     }
-  })
+  }
+  console.log(JSON.stringify(request))
+  return rp(request)
 }
 
 app.use(bodyParser())
