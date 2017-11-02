@@ -29,9 +29,6 @@ Add webhook in your project:
 
 ## example status
 
-* failed
 ![2017-11-02 21_46_04- wip get some users binding profiles by latesum pull request 627 pintia_i_li](https://user-images.githubusercontent.com/2534277/32329309-a85629bc-c017-11e7-9e51-aca32e4cd739.jpg)
 
-
-* succeeded
 ![2017-11-02 21_49_53-fix judge listener by latesum pull request 637 pintia_inside-identity_li](https://user-images.githubusercontent.com/2534277/32329366-d4c40596-c017-11e7-964f-859579c24fa1.jpg)
