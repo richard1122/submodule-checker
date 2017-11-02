@@ -1,12 +1,12 @@
 # submodule-checker
 Check whether a submodule is at master branch, and report a github commit status.
 
-## run
+## RUN
 
 DockerFile is provided, please start with enviroment variables:
 * GH_TOKEN: Your personal github access token, which have access right to target repo.
 
-## config (in your repos)
+## CONFIG (in your repos)
 
 ### Add config file
 
@@ -27,7 +27,7 @@ Add webhook in your project:
 * Secret: none
 * Which events would you like to trigger this webhook: Just the push event.
 
-## example status
+## EXAMPLE STATUS
 
 ![2017-11-02 21_46_04- wip get some users binding profiles by latesum pull request 627 pintia_i_li](https://user-images.githubusercontent.com/2534277/32329309-a85629bc-c017-11e7-9e51-aca32e4cd739.jpg)
 
