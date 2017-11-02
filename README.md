@@ -3,7 +3,7 @@ Check whether a submodule is at master branch, and report a github commit status
 
 ## run
 
-DockerFile is provided, please start with enviroment:
+DockerFile is provided, please start with enviroment variables:
 * GH_TOKEN: Your personal github access token, which have access right to target repo.
 
 ## config (in your repos)
