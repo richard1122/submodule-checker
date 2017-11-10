@@ -68,8 +68,8 @@ app.use(async ctx => {
           method: 'POST',
           body: {
             state: 'success',
-            context: `CI/submodule-checker-${subRepo}`,
-            description: `${subRepo} is on master`
+            context: `CI/submodule-${subRepo}`,
+            description: `${subRepo}-${sha.substr(0, 7)} is on master`
           },
           json: true
         })
@@ -78,8 +78,8 @@ app.use(async ctx => {
           method: 'POST',
           body: {
             state: 'failure',
-            context: `CI/submodule-checker-${subRepo}`,
-            description: `${subRepo} is NOT on master`
+            context: `CI/submodule-${subRepo}`,
+            description: `${subRepo}-${sha.substr(0, 7)} is NOT on master`
           },
           json: true
         })
@@ -90,7 +90,7 @@ app.use(async ctx => {
       method: 'POST',
       body: {
         state: 'error',
-        context: 'CI/submodule-checker',
+        context: 'CI/submodule',
         description: e.message || e
       },
       json: true
