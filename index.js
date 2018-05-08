@@ -1,29 +1,14 @@
 const Koa = require('koa')
 const bodyParser = require('koa-bodyparser')
-const rp = require('request-promise-native')
+const github = require('./installation')
 const app = new Koa()
-const github = {
-    "user-agent": "submodule-checker",
-    Authorization: `token ${process.env.GH_TOKEN}`
-}
-
-const request = (endpoint, options) => {
-  const request = {
-    uri: `https://api.github.com/${endpoint}`,
-    ...options,
-    headers: {
-      ...github
-    }
-  }
-  return rp(request)
-}
 
 app.use(bodyParser())
 
 app.use(async ctx => {
   const event = ctx.header['x-github-event']
   console.log(`${event} received.`)
-  if (event != 'push') {
+  if (event !== 'push') {
     ctx.body = "skip"
     return
   }
@@ -34,11 +19,18 @@ app.use(async ctx => {
   }
   const headCommit = body.head_commit.id
   const repo = body.repository.name
+  const branch = /refs\/heads\/(.*)/.exec(body.ref)[1]
   const owner = body.repository.owner.name
   console.log(`ready to process ${repo}:${headCommit}`)
 
+  const installationId = body.installation.id
+  const token = (await github.getToken(installationId)).token
+  const request = (endpoint, options) => {
+    return github.request(token, endpoint, options)
+  }
+
   try {
-    const response = await request(`repos/${owner}/${repo}/contents/.submodule_checker.json`, {
+    let response = await request(`repos/${owner}/${repo}/contents/.submodule_checker.json`, {
       qs: {
         ref: headCommit
       },
@@ -52,49 +44,35 @@ app.use(async ctx => {
       const submodule = await request(`repos/${owner}/${repo}/contents${it}`, {
         qs: {
           ref: headCommit
-        },
-        json: true
+        }
       })
       if (submodule.type !== 'submodule') return
-      const subRepo = submodule.submodule_git_url.split(':')[1].split('.')[0]
+      const subRepo = /github.com\/(.*)(\.git)?/.exec(submodule.submodule_git_url)[1]
       const sha = submodule.sha
       console.log(`${subRepo}:${sha}`)
-      const compare = await request(`repos/${subRepo}/compare/master...${sha}`, {
-        json: true
-      })
+      const defaultBranch = (await request(`repos/${subRepo}`)).default_branch
+
+      const compare = await request(`repos/${subRepo}/compare/${defaultBranch}...${sha}`)
       console.log(compare.status)
+
+      let state, description
       if (compare.status === 'identical' || compare.status === 'behind') {
-        return await request(`repos/${owner}/${repo}/statuses/${headCommit}`, {
-          method: 'POST',
-          body: {
-            state: 'success',
-            context: `CI/submodule-${subRepo}`,
-            description: `${subRepo}-${sha.substr(0, 7)} is on master`
-          },
-          json: true
-        })
+        state = 'success'
+        description = `${subRepo}-${sha.substr(0, 7)} is on ${defaultBranch}`
       } else {
-        return await request(`repos/${owner}/${repo}/statuses/${headCommit}`, {
-          method: 'POST',
-          body: {
-            state: 'failure',
-            context: `CI/submodule-${subRepo}`,
-            description: `${subRepo}-${sha.substr(0, 7)} is NOT on master`
-          },
-          json: true
-        })
+        state = 'failure'
+        description = `${subRepo}-${sha.substr(0, 7)} is NOT on ${defaultBranch}`
       }
+      return await request(`repos/${owner}/${repo}/statuses/${headCommit}`, {
+        method: 'POST',
+        body: {
+          state: state,
+          context: `CI/submodule-${subRepo}`,
+          description: description
+        },
+      })
     }))
   } catch(e) {
-    await request(`repos/${owner}/${repo}/statuses/${headCommit}`, {
-      method: 'POST',
-      body: {
-        state: 'error',
-        context: 'CI/submodule',
-        description: e.message || e
-      },
-      json: true
-    })
   }
 })
 
