@@ -6,4 +6,6 @@ jobs:
     steps:
       - setup_remote_docker
       - checkout
-      - run: docker build . -t submodule-checker
+      - run: docker build . -t richard1122/submodule-checker:`echo $CIRCLE_SHA1 | cut -c 1-7`
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run: docker push richard1122/submodule-checker:`echo $CIRCLE_SHA1 | cut -c 1-7`
