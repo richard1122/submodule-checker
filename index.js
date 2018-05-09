@@ -1,27 +1,20 @@
-const Koa = require('koa')
-const bodyParser = require('koa-bodyparser')
+const server = require('./http')
 const github = require('./installation')
-const app = new Koa()
+const EventEmitter = require('events')
+class Handler extends EventEmitter { }
+const handler = new Handler()
 
-app.use(bodyParser())
+const secret = process.env.APPSECRET
 
-app.use(async ctx => {
-  const event = ctx.header['x-github-event']
-  console.log(`${event} received.`)
-  if (event !== 'push') {
-    ctx.body = "skip"
-    return
-  }
-  const body = ctx.request.body
-  if (body === undefined) {
-    ctx.status = 400
-    return
-  }
+server(secret, handler)
+
+handler.on('error', console.error)
+
+handler.on('push', async body => {
   const headCommit = body.head_commit.id
   const repo = body.repository.name
   const branch = /refs\/heads\/(.*)/.exec(body.ref)[1]
   const owner = body.repository.owner.name
-  console.log(`ready to process ${repo}:${headCommit}`)
 
   const installationId = body.installation.id
   const token = (await github.getToken(installationId)).token
@@ -37,9 +30,7 @@ app.use(async ctx => {
       json: true
     })
     const content = JSON.parse(Buffer.from(response.content, 'base64').toString())
-    console.log(content)
-    ctx.body = "ok"
-
+    if (!Array.isArray(content)) return
     await Promise.all(content.map(async it => {
       const submodule = await request(`repos/${owner}/${repo}/contents${it}`, {
         qs: {
@@ -47,33 +38,37 @@ app.use(async ctx => {
         }
       })
       if (submodule.type !== 'submodule') return
-      const subRepo = /github.com\/(.*)(\.git)?/.exec(submodule.submodule_git_url)[1]
+      const subRepo = /github.com[/:](.*?)(\.git)?$/.exec(submodule.submodule_git_url)[1]
       const sha = submodule.sha
-      console.log(`${subRepo}:${sha}`)
       const defaultBranch = (await request(`repos/${subRepo}`)).default_branch
 
-      const compare = await request(`repos/${subRepo}/compare/${defaultBranch}...${sha}`)
-      console.log(compare.status)
+      let compare
+      try {
+        compare = (await request(`repos/${subRepo}/compare/${sha}...${defaultBranch}`)).status
+      } catch (e) {
+        // Usually means more than 250 commit range, or no common ancestor.
+        compare = 'unknown'
+      }
 
       let state, description
-      if (compare.status === 'identical' || compare.status === 'behind') {
+      if (compare === 'identical' || compare === 'ahead') {
         state = 'success'
-        description = `${subRepo}-${sha.substr(0, 7)} is on ${defaultBranch}`
+        description = `${subRepo}-${sha.substr(0, 7)} is on ${defaultBranch} (${compare})`
       } else {
         state = 'failure'
-        description = `${subRepo}-${sha.substr(0, 7)} is NOT on ${defaultBranch}`
+        description = `${subRepo}-${sha.substr(0, 7)} is NOT on ${defaultBranch} (${compare})`
       }
       return await request(`repos/${owner}/${repo}/statuses/${headCommit}`, {
         method: 'POST',
         body: {
           state: state,
-          context: `CI/submodule-${subRepo}`,
-          description: description
+          context: subRepo,
+          description: description,
+          target_url: `https://github.com/${subRepo}/compare/${sha}...${defaultBranch}`
         },
       })
     }))
   } catch(e) {
+    console.error(e)
   }
 })
-
-app.listen(3000)

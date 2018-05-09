@@ -1,10 +1,5 @@
 # submodule-checker
-Check whether a submodule is at master branch, and report a github commit status.
-
-## RUN
-
-DockerFile is provided, please start with enviroment variables:
-* GH_TOKEN: Your personal github access token, which have access right to target repo.
+Check whether a submodule is on default branch (usually master), and report a github commit status.
 
 ## CONFIG (in your repos)
 
@@ -13,11 +8,13 @@ DockerFile is provided, please start with enviroment variables:
 Config file `.submodule_checker.json`:
 ```json
 [
-  "/data/core"
+  "/fqdns",
+  "/hexo-theme-next",
+  "/dayjs"
 ]
 ```
 
-which means submodule at `/data/core` should at master.
+
 
 ### Add github webhook
 

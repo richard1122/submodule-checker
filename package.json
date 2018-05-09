@@ -18,10 +18,9 @@
   },
   "homepage": "https://github.com/richard1122/submodule-checker#readme",
   "dependencies": {
+    "bl": "^1.2.2",
     "github-app": "^3.2.0",
     "jsonwebtoken": "^8.2.1",
-    "koa": "^2.3.0",
-    "koa-bodyparser": "^4.2.0",
     "request": "^2.85.0",
     "request-promise-native": "^1.0.5"
   }

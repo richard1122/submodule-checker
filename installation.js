@@ -2,7 +2,7 @@ const rp = require('request-promise-native')
 const jwt = require('jsonwebtoken')
 const cert = require('fs').readFileSync('keys/key.pem')
 
-const appId = 11934
+const appId = process.env.APPID
 
 function getJwt() {
   const payload = {
