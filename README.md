@@ -1,7 +1,10 @@
-# submodule-checker
+# Submodule Checker
+
 Check whether a submodule is on default branch (usually master), and report a github commit status.
 
-## CONFIG (in your repos)
+![image](https://user-images.githubusercontent.com/2534277/39818697-19a932bc-53d4-11e8-8f72-57786c2886e6.png)
+
+## Config (in your repos)
 
 ### Add config file
 
@@ -14,18 +17,12 @@ Config file `.submodule_checker.json`:
 ]
 ```
 
+Put each submodule path (relative to root of current project) to a json array.
 
+This will check your submodule on default branch (master by default), if you would like to change default branch, please visit: https://help.github.com/articles/setting-the-default-branch/ .
 
-### Add github webhook
+### Install Github APP
 
-Add webhook in your project:
+Submodule Checker is now providing a Github App, you can install it here: https://github.com/apps/submodule-checker .
 
-* Content Type: application/json
-* Secret: none
-* Which events would you like to trigger this webhook: Just the push event.
-
-## EXAMPLE STATUS
-
-![2017-11-02 21_46_04- wip get some users binding profiles by latesum pull request 627 pintia_i_li](https://user-images.githubusercontent.com/2534277/32329309-a85629bc-c017-11e7-9e51-aca32e4cd739.jpg)
-
-![2017-11-02 21_49_53-fix judge listener by latesum pull request 637 pintia_inside-identity_li](https://user-images.githubusercontent.com/2534277/32329366-d4c40596-c017-11e7-964f-859579c24fa1.jpg)
+Please make sure your submodule project is also installed, otherwise commits cannot be compared.
