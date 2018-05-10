@@ -23,6 +23,11 @@ module.exports = (secret, handler) => {
       handler.emit('error', new Error(msg))
     }
 
+    if (req.url === '/healthz') {
+      res.writeHead(204)
+      return res.end()
+    }
+
     const sig = req.headers['x-hub-signature']
     const id = req.headers['x-github-delivery']
     const event = req.headers['x-github-event']
