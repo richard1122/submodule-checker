@@ -1,5 +1,7 @@
 # Submodule Checker
 
+[中文](https://blog.hlyue.com/2018/05/10/submodule-checker-development-notes/)
+
 Check whether a submodule is on default branch (usually master), and report a github commit status.
 
 ![image](https://user-images.githubusercontent.com/2534277/39818697-19a932bc-53d4-11e8-8f72-57786c2886e6.png)
