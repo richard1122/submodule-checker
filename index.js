@@ -64,7 +64,7 @@ handler.on('push', async body => {
           state: state,
           context: subRepo,
           description: description,
-          target_url: `https://github.com/${subRepo}/compare/${sha}...${defaultBranch}`
+          target_url: `https://github.com/${subRepo}/compare/${defaultBranch}...${sha}`
         },
       })
     }))
