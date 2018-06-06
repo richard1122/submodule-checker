@@ -7,7 +7,8 @@
     "start": "node --harmony index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "npm run build && gcloud beta functions deploy push --trigger-http",
-    "build": "babel src -d dst"
+    "build": "babel src -d dst",
+    "lint": "eslint src/ --fix"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,8 @@
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.49",
     "@babel/core": "^7.0.0-beta.49",
-    "@babel/preset-env": "^7.0.0-beta.49"
+    "@babel/preset-env": "^7.0.0-beta.49",
+    "eslint": "^4.19.1",
+    "eslint-config-recommended": "^2.0.0"
   }
 }

@@ -1,0 +1,14 @@
+---
+  env:
+    node: true
+  extends:
+    - recommended/esnext
+    - recommended/esnext/style-guide
+    - recommended/node
+    - recommended/node/style-guide
+  rules:
+    indent:
+      - error
+      - 2
+    no-console: off
+    import/no-nodejs-modules: off
