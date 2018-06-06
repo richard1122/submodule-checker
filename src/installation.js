@@ -1,6 +1,7 @@
 const rp = require('request-promise-native')
 const jwt = require('jsonwebtoken')
-const cert = require('fs').readFileSync('keys/key.pem')
+const path = require('path')
+const cert = require('fs').readFileSync(path.join(__dirname, '..', 'keys/key.pem'))
 
 const appId = process.env.APPID
 

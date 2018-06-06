@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node --harmony index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "npm run build && gcloud beta functions deploy push --trigger-http",
+    "build": "babel src -d dst"
   },
   "repository": {
     "type": "git",
@@ -23,5 +25,10 @@
     "jsonwebtoken": "^8.2.1",
     "request": "^2.85.0",
     "request-promise-native": "^1.0.5"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0-beta.49",
+    "@babel/core": "^7.0.0-beta.49",
+    "@babel/preset-env": "^7.0.0-beta.49"
   }
 }
