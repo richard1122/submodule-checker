@@ -17,4 +17,3 @@ node_modules
 #!include:.gitignore
 src
 !keys/key.pem
-!dst/
