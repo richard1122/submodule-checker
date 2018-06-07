@@ -1,9 +1,10 @@
-const github = require('./installation')
 const controllers = require('./controller')
 const crypto = require('crypto')
 const bl = require('bl')
+const runtimeConfig = require('cloud-functions-runtime-config')
 
-const secret = process.env.APPSECRET
+let secret = ''
+runtimeConfig.getVariable('submodule-checker', 'APPSECRET').then((value) => secret = value).catch(console.error)
 const OK_RESPONSE = JSON.stringify({ success: true })
 
 const verify = (sig, payload) => {
@@ -11,7 +12,7 @@ const verify = (sig, payload) => {
   return crypto.timingSafeEqual(Buffer.from(sig.replace('sha1=', ''), 'hex'), hash)
 }
 
-exports.push = (req, res) => {
+exports.push = async (req, res) => {
   const error = (msg) => {
     res.writeHead(400, {
       'Content-Type': 'Application/json'
@@ -29,20 +30,16 @@ exports.push = (req, res) => {
   if (event !== 'push') return error('Wrong event type.')
   if (!id) return error('No delivery id found.')
 
-  req.pipe(bl(async (err, data) => {
-    if (err) return error(err.message)
-    if (!verify(sig, data)) return error('Github signature check failed.')
-    let json
-    try { json = JSON.parse(data.toString()) } catch(e) { return error(e) }
-    try {
-      await controllers.push(json)
-      res.writeHead(200, {
-        'Content-Type': 'Application/json'
-      })
-      res.end(OK_RESPONSE)
-    } catch (e) {
-      console.error(e)
-      return error(e)
-    }
-  }))
+  if (!verify(sig, req.rawBody)) return error('Github signature check failed.')
+  const json = req.body
+  try {
+    await controllers.push(json)
+    res.writeHead(200, {
+      'Content-Type': 'Application/json'
+    })
+    res.end(OK_RESPONSE)
+  } catch (e) {
+    console.error(e)
+    return error(e)
+  }
 }

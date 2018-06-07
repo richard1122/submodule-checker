@@ -2,8 +2,10 @@ const rp = require('request-promise-native')
 const jwt = require('jsonwebtoken')
 const path = require('path')
 const cert = require('fs').readFileSync(path.join(__dirname, '..', 'keys/key.pem'))
+const runtimeConfig = require('cloud-functions-runtime-config')
 
-const appId = process.env.APPID
+let appId = ''
+runtimeConfig.getVariable('submodule-checker', 'APPID').then((value) => appId = value).catch(console.error)
 
 function getJwt() {
   const payload = {

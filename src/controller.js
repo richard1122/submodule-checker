@@ -3,7 +3,6 @@ const github = require('./installation')
 exports.push = async body => {
   const headCommit = body.head_commit.id
   const repo = body.repository.name
-  const branch = /refs\/heads\/(.*)/.exec(body.ref)[1]
   const owner = body.repository.owner.name
 
   const installationId = body.installation.id
