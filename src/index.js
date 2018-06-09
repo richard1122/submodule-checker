@@ -9,6 +9,7 @@ const OK_RESPONSE = JSON.stringify({ success: true })
 
 const verify = (sig, payload) => {
   const hash = crypto.createHmac('sha1', secret).update(payload).digest()
+  console.log(sig, hash.toString('hex'))
   return crypto.timingSafeEqual(Buffer.from(sig.replace('sha1=', ''), 'hex'), hash)
 }
 
