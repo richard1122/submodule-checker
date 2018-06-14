@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/richard1122/submodule-checker#readme",
   "dependencies": {
-    "bl": "2.0.0",
+    "bl": "2.0.1",
     "cloud-functions-runtime-config": "0.4.0",
     "github-app": "3.2.0",
     "jsonwebtoken": "8.3.0",
