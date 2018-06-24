@@ -1,6 +1,5 @@
 const controllers = require('./controller')
 const crypto = require('crypto')
-const bl = require('bl')
 const runtimeConfig = require('cloud-functions-runtime-config')
 
 let secret = ''
