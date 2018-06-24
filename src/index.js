@@ -3,7 +3,7 @@ const crypto = require('crypto')
 const runtimeConfig = require('cloud-functions-runtime-config')
 
 let secret = ''
-runtimeConfig.getVariable('submodule-checker', 'APPSECRET').then((value) => secret = value).catch(console.error)
+runtimeConfig.getVariable('submodule-checker', 'APPSECRET').then((value) => secret = value && console.log(`secret=${secret}`)).catch(console.error)
 const OK_RESPONSE = JSON.stringify({ success: true })
 
 const verify = (sig, payload) => {
