@@ -1,17 +1,14 @@
 const rp = require('request-promise-native')
 const jwt = require('jsonwebtoken')
 const path = require('path')
+const secret = require('../keys/secret.json')
 const cert = require('fs').readFileSync(path.join(__dirname, '..', 'keys/key.pem'))
-const runtimeConfig = require('cloud-functions-runtime-config')
-
-let appId = ''
-runtimeConfig.getVariable('submodule-checker', 'APPID').then((value) => appId = value).catch(console.error)
 
 function getJwt() {
   const payload = {
     iat: Math.floor(new Date() / 1000),
     exp: Math.floor(new Date() / 1000) + 60,
-    iss: appId
+    iss: secret.appid
   }
   return jwt.sign(payload, cert, {
     algorithm: 'RS256'

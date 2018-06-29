@@ -17,4 +17,5 @@ node_modules
 #!include:.gitignore
 src
 !keys/key.pem
+!keys/secret.json
 !dst
