@@ -60,3 +60,4 @@ typings/
 keys/key.pem
 keys/secret.json
 dst
+package-lock.json
