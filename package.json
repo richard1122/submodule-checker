@@ -22,7 +22,7 @@
   "dependencies": {
     "github-app": "3.2.0",
     "jsonwebtoken": "8.3.0",
-    "request": "2.87.0",
+    "request": "2.88.0",
     "request-promise-native": "1.0.5"
   },
   "devDependencies": {
