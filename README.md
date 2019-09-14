@@ -1,7 +1,5 @@
 # Submodule Checker
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/richard1122/submodule-checker.svg)](https://greenkeeper.io/)
-
 [中文](https://blog.hlyue.com/2018/05/10/submodule-checker-development-notes/)
 
 Check whether a submodule is on default branch (usually master), and report a github commit status.
